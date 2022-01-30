@@ -13,8 +13,11 @@ public class PlayerSword : MonoBehaviour
     private int enemyCount = SkeletonSpawner.totalSkeletonCount;
     [SerializeField] private LevelLoader levelLoader;
 
+    AudioManager audioManager;
+
     private void Start()
     {
+        audioManager = FindObjectOfType<AudioManager>();
         SkeletonEffect.OnDestroyed += EnemyDestroyed;
     }
 
@@ -28,6 +31,7 @@ public class PlayerSword : MonoBehaviour
 
     void SwordAttack()
     {
+        if (audioManager != null) audioManager.Play("BladeSwing");
         Collider2D[] enemyHitInfo = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
         foreach (Collider2D enemy in enemyHitInfo)
         {

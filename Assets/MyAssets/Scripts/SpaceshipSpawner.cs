@@ -8,7 +8,7 @@ public class SpaceshipSpawner : MonoBehaviour
     [SerializeField] private GameObject spaceShip;
     [SerializeField] private Transform PlayerTransform;
     private int spaceshipCount = 0;
-    public static int totalSpaceshipCount = 2;
+    public static int totalSpaceshipCount = 8;
 
     private void Start()
     {

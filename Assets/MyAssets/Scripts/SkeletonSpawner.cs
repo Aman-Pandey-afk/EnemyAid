@@ -8,7 +8,7 @@ public class SkeletonSpawner : MonoBehaviour
     [SerializeField] private GameObject skeleton;
     [SerializeField] private Transform PlayerTransform;
     private int skeletonCount=0;
-    public static int totalSkeletonCount = 2;
+    public static int totalSkeletonCount = 8;
 
     private void Start()
     {

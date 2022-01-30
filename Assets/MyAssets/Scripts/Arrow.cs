@@ -20,11 +20,11 @@ public class Arrow : MonoBehaviour
     {
         if(collision.collider.GetType()==typeof(CircleCollider2D))
         {
-            dragonEffect.TakeDamage(headshot);
+            dragonEffect.TakeDamage(headshot); Destroy(gameObject);
         }
         if (collision.collider.GetType() == typeof(BoxCollider2D))
         {
-            dragonEffect.TakeDamage(headshot);
+            dragonEffect.TakeDamage(headshot); Destroy(gameObject);
         }
     }
 

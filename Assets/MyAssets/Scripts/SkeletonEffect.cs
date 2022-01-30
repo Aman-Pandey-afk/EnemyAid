@@ -13,8 +13,11 @@ public class SkeletonEffect : MonoBehaviour
 
     private string state="ATTACK";
 
+    AudioManager audioManager;
+
     private void Start()
     {
+        audioManager = FindObjectOfType<AudioManager>();
         currHealth = health;
     }
 
@@ -34,6 +37,7 @@ public class SkeletonEffect : MonoBehaviour
         if (currHealth <= 0)
         {
             Destroy(gameObject);
+            if (audioManager != null) audioManager.Play("SkeletonDie");
             OnDestroyed?.Invoke();
         }
     }

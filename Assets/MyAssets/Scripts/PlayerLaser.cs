@@ -7,18 +7,21 @@ public class PlayerLaser: MonoBehaviour
     [SerializeField] private Transform attackPoint;
     [SerializeField] private LayerMask enemyLayer;
 
-    [SerializeField] private float laserDamage = 0.01f;
+    [SerializeField] private float laserDamage = 0.08f;
 
     public static bool isLaserFiring = false;
     [SerializeField] private LineRenderer attackLaser;
 
-    [SerializeField] private float ammo=15;
+    [SerializeField] private float ammo=20;
 
     [SerializeField] private LevelLoader levelLoader;
     private int enemyCount = SpaceshipSpawner.totalSpaceshipCount;
 
+    AudioManager audioManager;
+
     private void Start()
     {
+        audioManager = FindObjectOfType<AudioManager>();
         SpaceshipEffect.OnDestroyed += EnemyDestroyed;
         CharacterController.OnLaserAttack += LaserAttack;
         attackLaser.enabled = false;
@@ -42,7 +45,7 @@ public class PlayerLaser: MonoBehaviour
     {
         if(collision.gameObject.CompareTag("DEADUFO") && Input.GetKeyDown(KeyCode.E))
         {
-            ammo += 3;
+            ammo += 6;
             Destroy(collision.gameObject);
         }
     }
@@ -52,7 +55,7 @@ public class PlayerLaser: MonoBehaviour
         if (ammo > 0)
         {
             isLaserFiring = true;
-
+            if (audioManager != null) audioManager.Play("PlayerLaser");
             int dir;
             if (CharacterController.isFacingRight) dir = 1;
             else dir = -1;

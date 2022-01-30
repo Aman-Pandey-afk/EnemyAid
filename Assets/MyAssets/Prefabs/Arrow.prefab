@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 2974863995439723783}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: -0.33805066, y: -1.7321705, z: 0}
-  m_LocalScale: {x: 0.49871, y: 0.49871, z: 0.49871}
+  m_LocalScale: {x: 0.3191744, y: 0.3191744, z: 0.3191744}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 4330147157530043453, guid: cf1c696f298cad545ad51127da167305, type: 3}
+  m_Sprite: {fileID: -4630403633323831122, guid: 2923c189de6f99548bd9cfc96414a5e0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 1
@@ -103,7 +103,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.27, y: 5.91}
+    oldSize: {x: 10.69, y: 1.95}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -146,5 +146,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dragonEffect: {fileID: 0}
-  headshot: 3
-  bodyDamage: 1
+  headshot: 6.5
+  bodyDamage: 3

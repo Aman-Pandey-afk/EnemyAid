@@ -20,8 +20,11 @@ public class SpaceshipEffect : MonoBehaviour
 
     [SerializeField] private GameObject DeadUFO;
 
+    AudioManager audioManager;
+
     private void Start()
     {
+        audioManager = FindObjectOfType<AudioManager>();
         targetPlayer = gameObject.GetComponent<AIDestinationSetter>().target;
         enemyLaser.enabled = false;
         currHealth = health;
@@ -39,6 +42,7 @@ public class SpaceshipEffect : MonoBehaviour
     private void Shoot()
     {
         Vector2 targetDir = targetPlayer.position - attackPoint.position;
+        if (audioManager != null)  audioManager.Play("SpaceshipLaser");
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, targetDir);
         if (hitInfo)
         {
@@ -54,6 +58,7 @@ public class SpaceshipEffect : MonoBehaviour
         currHealth -= damage;
         if (currHealth <= 0)
         {
+            if (audioManager != null) audioManager.Play("SpaceshipDie");
             Instantiate(DeadUFO, transform.position, Quaternion.Euler(0,0,145));
             Destroy(gameObject);
             OnDestroyed?.Invoke();

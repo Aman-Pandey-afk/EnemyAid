@@ -2,19 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerDamage : MonoBehaviour
 {
-    [SerializeField] private float playerHealth;
-    [SerializeField] private float skeletalDamage;
-    [SerializeField] private float continousDamage;
-    [SerializeField] private float dragonDamage;
+    private float maxHealth = 100;
+    public static float playerHealth=100;
+    [SerializeField] private float skeletalDamage=3;
+    [SerializeField] private float continousDamage=0.05f;
+    [SerializeField] private float dragonDamage=7;
 
     private float shieldTime = 0;
     private string state = "NOSHIELD";
 
+    public Image image;
+
+    [SerializeField] private GameObject shield;
+
+    AudioManager audioManager;
+
+    public GameObject GameLoseUI;
+
     private void Start()
     {
+        maxHealth = playerHealth;
+        GameLoseUI.SetActive(false);
+        if(shield!=null) shield.SetActive(false);
+        audioManager = FindObjectOfType<AudioManager>();
         SkeletonEffect.OnDestroyed += ManageShield;
         SkeletonEffect.OnDealDamage += TakeSkeletalDamage;
         SpaceshipEffect.OnDealDamage += TakeSpaceshipDamage;
@@ -28,14 +42,24 @@ public class PlayerDamage : MonoBehaviour
             if(shieldTime>0)
             {
                 state = "SHIELD";
+                if (audioManager != null) audioManager.Play("Shield");
+                shield.SetActive(true);
                 StartCoroutine(ShieldTiming());
             }
+        }
+        image.GetComponent<Image>().fillAmount = playerHealth / maxHealth;
+        if(playerHealth<0)
+        {
+            GameLoseUI.SetActive(true);
+            Destroy(gameObject);
         }
     }
 
     IEnumerator ShieldTiming()
     {
         yield return new WaitForSeconds(shieldTime);
+        shield.SetActive(false);
+        shieldTime = 0;
         state = "NOSHIELD";
     }
 

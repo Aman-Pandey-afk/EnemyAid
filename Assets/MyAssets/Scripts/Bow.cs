@@ -15,10 +15,14 @@ public class Bow : MonoBehaviour
     [SerializeField] private int noOfPoints;
     [SerializeField] private float spaceBetweenPoints;
 
+    int arrowNo=30;
+
     private Vector2 dir;
+    AudioManager audioManager;
 
     private void Start()
     {
+        audioManager = FindObjectOfType<AudioManager>();
         pathPoints = new GameObject[noOfPoints];
         for(int i=0; i<noOfPoints; i++)
         {
@@ -36,7 +40,11 @@ public class Bow : MonoBehaviour
 
         if(Input.GetMouseButtonDown(0))
         {
-            Shoot();
+            if (arrowNo > 0)
+            {
+                Shoot();
+                arrowNo--;
+            }
         }
         for (int i = 0; i < noOfPoints; i++)
         {
@@ -46,6 +54,7 @@ public class Bow : MonoBehaviour
 
     private void Shoot()
     {
+        if (audioManager != null) audioManager.Play("Bow");
         GameObject newArrow = Instantiate(arrow, firePoint.position, firePoint.rotation);
         newArrow.GetComponent<Rigidbody2D>().velocity = transform.right * launchForce;
         newArrow.GetComponent<Arrow>().dragonEffect = drgEffect;

@@ -13,6 +13,13 @@ public class CharacterController : MonoBehaviour
 
     public static bool isFacingRight=false;
 
+    AudioManager audioManager;
+
+    private void Start()
+    {
+        audioManager = FindObjectOfType<AudioManager>();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -24,12 +31,14 @@ public class CharacterController : MonoBehaviour
         {
             isFacingRight = true;
             transform.rotation = Quaternion.Euler(0, 180, 0);
+            if(audioManager!=null) audioManager.Play("Walk");
         }
 
         else if (movHor < 0)
         {
             isFacingRight = false;
             transform.rotation = Quaternion.Euler(0, 0, 0);
+            if (audioManager != null) audioManager.Play("Walk");
         }
 
         //Jump

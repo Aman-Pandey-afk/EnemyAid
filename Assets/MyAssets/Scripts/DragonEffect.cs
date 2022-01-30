@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.Experimental.Rendering.Universal;
+using UnityEngine.UI;
 
 public class DragonEffect : MonoBehaviour
 {
     public static event Action OnDealDamage;
     private string state = "ATTACK";
 
-    [SerializeField] private float health = 10;
+    [SerializeField] private float health = 150;
     private float currHealth;
 
     private bool canHeal=true;
@@ -19,10 +20,18 @@ public class DragonEffect : MonoBehaviour
     [SerializeField] private GameObject HealPsystem;
     [SerializeField] private Transform Player;
 
+    public GameObject gameWinUI;
+
     [SerializeField] private Light2D healLight;
+
+    public Image image;
+
+    AudioManager audioManager;
 
     private void Start()
     {
+        gameWinUI.SetActive(false);
+        audioManager = FindObjectOfType<AudioManager>();
         currHealth = health;
         healLight.enabled = false;
         HealPsystem.GetComponent<ParticleSystem>().Stop();
@@ -36,24 +45,28 @@ public class DragonEffect : MonoBehaviour
             OnDealDamage?.Invoke();
             state = "IDLE";
             Fire.GetComponent<ParticleSystem>().Play();
+            if (audioManager != null) audioManager.Play("DragonGrawl");
+            if (audioManager != null) audioManager.Play("Fire");
             StartCoroutine(StateManager());
         }
-        if(currHealth<5 && canHeal)
+        if(currHealth<50 && canHeal)
         {
             state = "HEAL";
             HealPsystem.GetComponent<ParticleSystem>().Play();
+            if (audioManager != null) audioManager.Play("Heal");
             healLight.enabled = true;
             canHeal = false;
             StartCoroutine(StateManager());
         }
         if(state == "HEAL")
         {
-            currHealth += 0.01f;
+            currHealth += 0.1f;
             if(Mathf.Abs(Player.position.x-transform.position.x)<6)
             {
-                Player.GetComponent<PlayerDamage>().Heal(0.01f);
+                Player.GetComponent<PlayerDamage>().Heal(0.1f);
             }
         }
+        image.GetComponent<Image>().fillAmount = currHealth / health;
     }
 
     IEnumerator StateManager()
@@ -75,6 +88,10 @@ public class DragonEffect : MonoBehaviour
     public void TakeDamage(float damage)
     {
         currHealth -= damage;
-        if (currHealth <= 0) Destroy(gameObject);
+        if (currHealth <= 0)
+        {
+            Destroy(gameObject);
+            gameWinUI.SetActive(true);
+        }
     }
 }
