@@ -44,7 +44,7 @@ public class SkeletonEffect : MonoBehaviour
 
     IEnumerator StateManager()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1f);
         state = "ATTACK";
     }
 }

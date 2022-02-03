@@ -8,17 +8,19 @@ public class PlayerSword : MonoBehaviour
     [SerializeField] private LayerMask enemyLayer;
 
     [SerializeField] private float attackRange;
-    [SerializeField] private int swordDamage = 4;
+    [SerializeField] private int swordDamage = 3;
 
-    private int enemyCount = SkeletonSpawner.totalSkeletonCount;
+    private int enemyCount = SkeletonSpawner.totalSkeletonCount*2;
     [SerializeField] private LevelLoader levelLoader;
 
     AudioManager audioManager;
+    private bool disabled=false;
 
     private void Start()
     {
         audioManager = FindObjectOfType<AudioManager>();
         SkeletonEffect.OnDestroyed += EnemyDestroyed;
+        PlayerDamage.OnPlayerDie += Disable;
     }
 
     private void Update()
@@ -31,11 +33,14 @@ public class PlayerSword : MonoBehaviour
 
     void SwordAttack()
     {
-        if (audioManager != null) audioManager.Play("BladeSwing");
-        Collider2D[] enemyHitInfo = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
-        foreach (Collider2D enemy in enemyHitInfo)
+        if (!disabled)
         {
-            enemy.GetComponent<SkeletonEffect>().TakeDamage(swordDamage);
+            if (audioManager != null) audioManager.Play("BladeSwing");
+            Collider2D[] enemyHitInfo = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+            foreach (Collider2D enemy in enemyHitInfo)
+            {
+                enemy.GetComponent<SkeletonEffect>().TakeDamage(swordDamage);
+            }
         }
     }
 
@@ -44,9 +49,14 @@ public class PlayerSword : MonoBehaviour
         enemyCount -= 1;
     }
 
-    private void OnDrawGizmosSelected()
+    private void Disable()
     {
-        if (attackPoint == null) return;
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+        disabled = true;
+    }
+
+    private void OnDestroy()
+    {
+        SkeletonEffect.OnDestroyed -= EnemyDestroyed;
+        PlayerDamage.OnPlayerDie -= Disable;
     }
 }

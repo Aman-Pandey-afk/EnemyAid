@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
+using TMPro;
 
 public class PlayerDamage : MonoBehaviour
 {
-    private float maxHealth = 100;
-    public static float playerHealth=100;
+    // Variables
+
+    [SerializeField] private float maxHealth = 100;
+    private float playerHealth;
+
     [SerializeField] private float skeletalDamage=3;
     [SerializeField] private float continousDamage=0.05f;
     [SerializeField] private float dragonDamage=7;
@@ -15,23 +20,36 @@ public class PlayerDamage : MonoBehaviour
     private float shieldTime = 0;
     private string state = "NOSHIELD";
 
-    public Image image;
+    public static event Action OnPlayerDie;
+
+    [SerializeField] private Slider slider;
+    [SerializeField] private Gradient gradient;
+    [SerializeField] private Image image;
 
     [SerializeField] private GameObject shield;
 
     AudioManager audioManager;
 
     public GameObject GameLoseUI;
+    public TextMeshProUGUI text;
+
+
+    // Start & Update
 
     private void Start()
     {
-        maxHealth = playerHealth;
+        playerHealth = maxHealth;
+
         GameLoseUI.SetActive(false);
         if(shield!=null) shield.SetActive(false);
+
         audioManager = FindObjectOfType<AudioManager>();
+
         SkeletonEffect.OnDestroyed += ManageShield;
         SkeletonEffect.OnDealDamage += TakeSkeletalDamage;
+
         SpaceshipEffect.OnDealDamage += TakeSpaceshipDamage;
+
         DragonEffect.OnDealDamage += TakeDragonDamage;
     }
 
@@ -47,16 +65,29 @@ public class PlayerDamage : MonoBehaviour
                 StartCoroutine(ShieldTiming());
             }
         }
-        image.GetComponent<Image>().fillAmount = playerHealth / maxHealth;
-        if(playerHealth<0)
+        
+        if(playerHealth<=0)
         {
             GameLoseUI.SetActive(true);
-            Destroy(gameObject);
+            OnPlayerDie();
         }
+
+        if(SceneManager.GetActiveScene().buildIndex == 3)
+        {
+            if (transform.position.x < 4) dragonDamage = 6.6f;
+            else dragonDamage = 3.2f;
+        }
+
+        slider.value = playerHealth;
+        image.color = gradient.Evaluate(slider.normalizedValue);
     }
+
+
+    // Methods
 
     IEnumerator ShieldTiming()
     {
+        text.text = "Shield in Use";
         yield return new WaitForSeconds(shieldTime);
         shield.SetActive(false);
         shieldTime = 0;
@@ -65,7 +96,8 @@ public class PlayerDamage : MonoBehaviour
 
     private void ManageShield()
     {
-        shieldTime += 0.5f;
+        shieldTime += 0.65f;
+        text.text = shieldTime.ToString() + "s";
     }
 
     private void TakeSkeletalDamage()
@@ -83,5 +115,15 @@ public class PlayerDamage : MonoBehaviour
     public void Heal(float healAmount)
     {
         playerHealth += healAmount;
+    }
+
+    private void OnDestroy()
+    {
+        SkeletonEffect.OnDestroyed -= ManageShield;
+        SkeletonEffect.OnDealDamage -= TakeSkeletalDamage;
+
+        SpaceshipEffect.OnDealDamage -= TakeSpaceshipDamage;
+
+        DragonEffect.OnDealDamage -= TakeDragonDamage;
     }
 }

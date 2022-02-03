@@ -146,5 +146,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dragonEffect: {fileID: 0}
-  headshot: 6.5
+  headshot: 7
   bodyDamage: 3

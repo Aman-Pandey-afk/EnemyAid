@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerLaser: MonoBehaviour
 {
@@ -12,7 +13,9 @@ public class PlayerLaser: MonoBehaviour
     public static bool isLaserFiring = false;
     [SerializeField] private LineRenderer attackLaser;
 
-    [SerializeField] private float ammo=20;
+    [SerializeField] private float ammo=18;
+    public TextMeshProUGUI text;
+    [SerializeField] private Color textColor;
 
     [SerializeField] private LevelLoader levelLoader;
     private int enemyCount = SpaceshipSpawner.totalSpaceshipCount;
@@ -45,8 +48,11 @@ public class PlayerLaser: MonoBehaviour
     {
         if(collision.gameObject.CompareTag("DEADUFO") && Input.GetKeyDown(KeyCode.E))
         {
-            ammo += 6;
+            if (ammo < 0) text.color = textColor;
+
+            ammo += 4f;
             Destroy(collision.gameObject);
+            text.text = Mathf.RoundToInt(ammo).ToString();
         }
     }
 
@@ -61,7 +67,7 @@ public class PlayerLaser: MonoBehaviour
             else dir = -1;
 
             Vector2 attackOrigin = attackPoint.position;
-            RaycastHit2D hitInf = Physics2D.Raycast(attackOrigin, new Vector2(attackOrigin.x + dir, attackOrigin.y + 1) - attackOrigin);
+            RaycastHit2D hitInf = Physics2D.Raycast(attackOrigin, new Vector2(attackOrigin.x + dir, attackOrigin.y + 1.2f) - attackOrigin);
 
             if (hitInf)
             {
@@ -79,11 +85,19 @@ public class PlayerLaser: MonoBehaviour
             }
             attackLaser.enabled = true;
             ammo -= 0.02f;
+            text.text = Mathf.RoundToInt(ammo).ToString();
         }
         else
         {
-            print("NO AMMO!");
+            text.color = Color.red;
+            text.text = "No ammo";
             attackLaser.enabled = false;
         }
+    }
+
+    private void OnDestroy()
+    {
+        SpaceshipEffect.OnDestroyed -= EnemyDestroyed;
+        CharacterController.OnLaserAttack -= LaserAttack;
     }
 }

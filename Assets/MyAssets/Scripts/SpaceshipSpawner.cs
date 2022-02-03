@@ -7,8 +7,11 @@ public class SpaceshipSpawner : MonoBehaviour
 {
     [SerializeField] private GameObject spaceShip;
     [SerializeField] private Transform PlayerTransform;
+    [SerializeField] private Vector2 speedRange;
+    [SerializeField] private Vector2 spawnRange;
+
     private int spaceshipCount = 0;
-    public static int totalSpaceshipCount = 8;
+    public static int totalSpaceshipCount=5;
 
     private void Start()
     {
@@ -19,8 +22,11 @@ public class SpaceshipSpawner : MonoBehaviour
     {
         while (spaceshipCount < totalSpaceshipCount)
         {
-            GameObject newSkeleton = Instantiate(spaceShip, transform.position, Quaternion.identity);
-            newSkeleton.GetComponent<AIDestinationSetter>().target = PlayerTransform;
+            float speed = Random.Range(speedRange.x, speedRange.y);
+            float spawnCor = Random.Range(spawnRange.x, spawnRange.y);
+            GameObject newSpaceship = Instantiate(spaceShip, transform.position + new Vector3(spawnCor,0), Quaternion.identity);
+            newSpaceship.GetComponent<AIDestinationSetter>().target = PlayerTransform;
+            newSpaceship.GetComponent<AIPath>().maxSpeed = speed;
             spaceshipCount++;
             yield return new WaitForSeconds(2);
         }

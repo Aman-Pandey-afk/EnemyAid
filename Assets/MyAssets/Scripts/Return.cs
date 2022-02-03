@@ -9,4 +9,8 @@ public class Return : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 }

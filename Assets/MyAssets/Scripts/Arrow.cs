@@ -24,7 +24,7 @@ public class Arrow : MonoBehaviour
         }
         if (collision.collider.GetType() == typeof(BoxCollider2D))
         {
-            dragonEffect.TakeDamage(headshot); Destroy(gameObject);
+            dragonEffect.TakeDamage(bodyDamage); Destroy(gameObject);
         }
     }
 
