@@ -1240,7 +1240,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   skeletalDamage: 3
-  continousDamage: 0.025
+  continousDamage: 0.02
   dragonDamage: 7
   slider: {fileID: 131387858}
   gradient:

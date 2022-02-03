@@ -40,10 +40,9 @@ public class Bow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (PauseMenu.isGamePaused) return;
         if (!disabled)
         {
-            if (PauseMenu.isGamePaused) return;
-
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 bowPosition = transform.position;
 
